@@ -1,20 +1,35 @@
 import { useState } from "react";
 
 const InvoiceItems = () => {
-  const sum = 0;
-  const [value1, setValue1] = useState(0);
-  const [value2, setValue2] = useState(0);
-  const [value3, setValue3] = useState(0);
+  let sum = 0;
+  const [totalSum, setTotalSum] = useState(0)
+  const [details, setDetails] = useState({
+    value1: "",
+    value2: "",
+    value3: ""
+  })
+
   const handleChange = (e) => {
-    setValue1(e.target.value);
-    setValue2(e.target.vaule);
-    setValue3(e.target.vaule);
-  };
+    // console.log(e.target)
+    const inputName = e.target.name
+    const inputValue = e.target.value
+    setDetails((previousValues) => {
+      return {...previousValues, [inputName]: inputValue }
+    })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    Object.keys(details).map((key) => {
+      sum += Number(details[key])
+    })
+    setTotalSum(sum)
+  }
 
   return (
     <div className="container">
       <div className="">
-        <form action="">
+        <form onSubmit={handleSubmit}>
           <div className="m-1 row g-3">
             <div className="col-auto">
               <label className="form-label" htmlFor="item-one">
@@ -26,6 +41,7 @@ const InvoiceItems = () => {
                 className="form-control"
                 id="item-one"
                 type="text"
+                name="value1"
                 onChange={handleChange}
               ></input>
             </div>
@@ -41,6 +57,7 @@ const InvoiceItems = () => {
                 className="form-control"
                 id="item-two"
                 type="text"
+                name="value2"
                 onChange={handleChange}
               ></input>
             </div>
@@ -56,15 +73,15 @@ const InvoiceItems = () => {
                 className="form-control"
                 id="item-three"
                 type="text"
+                name="value3"
                 onChange={handleChange}
               ></input>
             </div>
           </div>
 
-          <button className="btn btn-primary">Calculate Sum</button>
+          <button type="submit" className="btn btn-primary" >Calculate Sum</button>
           <p>
-            Sum is{" "}
-            {sum + parseInt(value1) + parseInt(value2) + parseInt(value3)}
+            Sum is : {totalSum}
           </p>
         </form>
       </div>
