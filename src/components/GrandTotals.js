@@ -1,11 +1,9 @@
-import {React, useState} from "react";
+import { React, useState } from "react";
+import * as XLSX from "xlsx/xlsx";
 
 const GrandTotals = () => {
-
-
   let [bC, setBC] = useState(0);
-  let [beforeContingency, setBeforeContingency] = useState(0)
-  // let [contingency, setContingency] = useState(0)
+  let [beforeContingency, setBeforeContingency] = useState(0);
   let contingency = beforeContingency * (3 / 100);
   let beforeTax = beforeContingency + contingency;
   let tax = beforeTax * (15 / 100);
@@ -13,16 +11,31 @@ const GrandTotals = () => {
 
   let handleChange = (e) => {
     let name = e.target.name;
-    let value = e.target.value
-    setBC(value)
-    console.log(bC)
-  }
+    let value = e.target.value;
+    setBC(value);
+    console.log(bC);
+  };
+
+  let data = [{
+    v1: beforeContingency,
+    v2: contingency,
+    v3: beforeTax,
+    v4: tax,
+    v5: grandTotal,
+  }];
+
+  let handleExport = () => {
+    console.log(data);
+    var wb = XLSX.utils.book_new(),
+    ws = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "MyExcel.xlsx");
+  };
 
   let handleSubmit = (e) => {
-    e.preventDefault()
-    setBeforeContingency(Number(bC))
-    // setContingency(beforeContingency * (3 / 100))
-  }
+    e.preventDefault();
+    setBeforeContingency(Number(bC));
+  };
 
   return (
     <div className="container mt-5">
@@ -48,16 +61,10 @@ const GrandTotals = () => {
               Button
             </button>
           </div>
+          <button onClick={handleExport}>export</button>
         </div>
       </form>
 
-      {/* <p className="text-primary">
-        Before Contingency: R{beforeContingency.toFixed(2)}
-      </p>
-      <p>Contingency: R{contingency.toFixed(2)}</p>
-      <p>Before Tax: R{beforeTax.toFixed(2)}</p>
-      <p>Tax: R{tax.toFixed(2)}</p>
-      <p>Grand Total: R{grandTotal.toFixed(2)}</p> */}
       <div className="row">
         <div className="col-6">
           <table className="table table-dark table-hover table-bordered">
